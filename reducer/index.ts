@@ -14,6 +14,7 @@ type Action =
   | { type: "START_STAGE"; time: number }
   | { type: "CLEAR_STAGE" }
   | { type: "TIME_DECREASE"; time: number }
+  | { type: "GAME_START" }
   | { type: "GAME_OVER" };
 
 const initialState: State = {
@@ -41,11 +42,18 @@ const gameReducer = (state: State, action: Action): State => {
         answerColor: answerColor,
       };
     case "CLEAR_STAGE":
-      return { ...state, stage: state.stage + 1 };
+      return {
+        ...state,
+        stage: state.stage + 1,
+        score: state.score + Math.pow(state.stage, 3) * state.time,
+      };
     case "TIME_DECREASE":
       return { ...state, time: state.time < action.time ? 0 : state.time - action.time };
+    case "GAME_START":
+      return { ...initialState, isPlaying: true };
     case "GAME_OVER":
-      return { ...initialState };
+      return { ...state, isPlaying: false };
+
     default:
       throw new Error("Action type error");
   }

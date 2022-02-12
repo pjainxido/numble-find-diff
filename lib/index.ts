@@ -4,9 +4,16 @@ function getRandomInteger(min: number, max: number) {
 
 function getRandomPairColor(diff: number) {
   const baseNumber: number = Math.random();
-  const defaultColor: string = "#" + Math.floor(baseNumber * 16777215).toString(16);
-  const answerColor: string = "#" + Math.floor(Math.random() * 16777215).toString(16);
+  const defaultColor: string = `rgb(${getRandomInteger(0, 255)},${getRandomInteger(
+    0,
+    255
+  )},${getRandomInteger(0, 255)})`;
+  const answerColor: string = `rgb(${getRandomInteger(0, 255)},${getRandomInteger(
+    0,
+    255
+  )},${getRandomInteger(0, 255)})`;
+
   return { defaultColor, answerColor };
 }
 
-export { getRandomInteger, getRandomPairColor};
+export { getRandomInteger, getRandomPairColor };

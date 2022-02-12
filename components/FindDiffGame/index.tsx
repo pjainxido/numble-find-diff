@@ -12,8 +12,8 @@ interface IFindDiffGame {
 }
 
 const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePerStage }) => {
-  const [{ isPlaying, stage, score, time, answer, defaultColor, answerColor }, dispatch] =
-    useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const { isPlaying, stage, score, time, answer, defaultColor, answerColor } = state;
 
   const blockRowCount = Math.round((stage + 0.5) / 2) + 1;
   const totalBlockCount = Math.pow(blockRowCount, 2);
@@ -25,6 +25,7 @@ const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePer
 
   useEffect(() => {
     dispatch({ type: "START_STAGE", time: timePerStage });
+    console.log(state);
     const timer = setInterval(() => {
       if (isPlaying) decreaseTime(1);
     }, 1000);
@@ -32,9 +33,11 @@ const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePer
   }, [stage]);
 
   useEffect(() => {
-    if (time < 1) {
+    console.log(state);
+    if (time === 0) {
       dispatch({ type: "GAME_OVER" });
-      console.log("false");
+      alert(`GAME OVER 스테이지: ${stage} 점수: ${score} `);
+      dispatch({ type: "GAME_START" });
     }
   }, [time]);
 
