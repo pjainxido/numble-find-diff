@@ -1,67 +1,60 @@
-import { useState, useEffect } from "react";
-import GameHeader from "./GameHeader";
+import { useState, useEffect, useReducer } from "react";
+import { gameReducer, initialState } from "../../reducer";
+import GameHeader from "./Header";
+import Block from "./Block";
 
 import styles from "./FindDiffGame.module.css";
 
 interface IFindDiffGame {
-  width: number;
-  height: number;
+  boardSide: number;
   timePenalty: number;
   timePerStage: number;
 }
 
-const FindDiffGame: React.FC<IFindDiffGame> = ({ width, height, timePenalty, timePerStage }) => {
-  const [stage, setStage] = useState<number>(4);
-  const [score, setScore] = useState<number>(0);
-  const [timer, setTimer] = useState<number>(0);
-  const [answer, setAnswer] = useState<number>(0);
-  const [blockArray, setBlockArray] = useState<string[]>([]);
-  const [blockSize, setBlockSize] = useState<number>(0);
+const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePerStage }) => {
+  const [{ isPlaying, stage, score, time, answer, defaultColor, answerColor }, dispatch] =
+    useReducer(gameReducer, initialState);
 
-  const generateBlock= (blockCount: number) => {
-    const color = getRandomColor();
-    let tmp: string[] = Array.from({ length: blockCount }, () => color);
+  const blockRowCount = Math.round((stage + 0.5) / 2) + 1;
+  const totalBlockCount = Math.pow(blockRowCount, 2);
+  const blockSideLength = boardSide / blockRowCount - 4;
 
-    function randomInteger(min: number, max: number) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    const answerIndex = randomInteger(0, blockCount - 1);
-    setAnswer(answerIndex);
-    tmp[answerIndex] = getRandomColor() ;
-    console.log(tmp);
-
-
-    setBlockArray(tmp);
+  const decreaseTime = (input: number) => {
+    dispatch({ type: "TIME_DECREASE", time: input });
   };
 
   useEffect(() => {
-   
-    setTimer(timePerStage);
-    const blockRowCount = Math.round((stage + 0.5) / 2) + 1;
-
-    setBlockSize(width / blockRowCount - 4);
-
-    const totalBlockCount = Math.pow(blockRowCount, 2);
-    generateBlock(totalBlockCount);
+    dispatch({ type: "START_STAGE", time: timePerStage });
+    const timer = setInterval(() => {
+      if (isPlaying) decreaseTime(1);
+    }, 1000);
+    return () => clearInterval(timer);
   }, [stage]);
 
-  function getRandomColor() {
-    var letters = "0123456789ABCDEF";
-    var color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
+  useEffect(() => {
+    if (time < 1) {
+      dispatch({ type: "GAME_OVER" });
+      console.log("false");
     }
-    return color;
-  }
+  }, [time]);
+
+  const onSelect = (index: number) => {
+    if (index === answer) {
+      dispatch({ type: "CLEAR_STAGE" });
+    } else decreaseTime(timePenalty);
+  };
 
   return (
     <>
-      <GameHeader stage={stage} time={timer} score={score} />
+      <GameHeader stage={stage} time={time} score={score} />
       <div className={styles.wrapper}>
-        {blockArray.map((color, index) => (
-          <div
+        {Array.from({ length: totalBlockCount }).map((_, index) => (
+          <Block
             key={index}
-            style={{ width: blockSize, margin: 2, height: blockSize, backgroundColor: color }}
+            id={index}
+            side={blockSideLength}
+            color={index === answer ? answerColor : defaultColor}
+            onSelect={onSelect}
           />
         ))}
       </div>
