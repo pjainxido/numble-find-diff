@@ -4,7 +4,7 @@ interface IGameHeader {
   score: number;
 }
 
-const GameHeader: React.FC<IGameHeader> = ({ stage, time, score }) => {
+const Header: React.FC<IGameHeader> = ({ stage, time, score }) => {
   return (
     <header>
       스테이지: {stage}, 남은 시간: {time}, 점수: {score}
@@ -12,4 +12,4 @@ const GameHeader: React.FC<IGameHeader> = ({ stage, time, score }) => {
   );
 };
 
-export default GameHeader;
+export default Header;
