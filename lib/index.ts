@@ -8,7 +8,7 @@ function plusOrMinus() {
 
 function getRandomPairColor(stage: number) {
   const baseRgb: number[] = Array.from({ length: 3 }, () => getRandomInteger(0, 255));
-  const matchDiff = Math.round(stage*0.2 + 0.5 / 2);
+  const matchDiff = Math.round(stage * 0.2 + 0.5 / 2);
   const answerRgb: number[] = baseRgb.map((item) => {
     return item + plusOrMinus() * Math.floor(item / matchDiff);
   });
