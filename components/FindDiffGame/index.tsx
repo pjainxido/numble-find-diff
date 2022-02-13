@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { gameReducer, initialState } from "../../reducer";
-import GameHeader from "./Header";
+import Header from "./Header";
 import Block from "./Block";
 
 import styles from "./FindDiffGame.module.css";
@@ -51,7 +51,7 @@ const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePer
 
   return (
     <>
-      <GameHeader stage={stage} time={time} score={score} />
+      <Header stage={stage} time={time} score={score} />
       <div className={styles.wrapper}>
         {Array.from({ length: totalBlockCount }).map((_, index) => (
           <Block
