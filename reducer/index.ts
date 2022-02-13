@@ -32,7 +32,7 @@ const gameReducer = (state: State, action: Action): State => {
     case "START_STAGE":
       const blockCount = Math.pow(Math.round((state.stage + 0.5) / 2) + 1, 2);
       const answerIndex = getRandomInteger(0, blockCount - 1);
-      const { defaultColor, answerColor } = getRandomPairColor(1);
+      const { defaultColor, answerColor } = getRandomPairColor(state.stage);
       return {
         ...state,
         isPlaying: true,
