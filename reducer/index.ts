@@ -12,9 +12,9 @@ type State = {
 
 type Action =
   | { type: "START_STAGE"; time: number }
+  | { type: "RESET_GAME" }
   | { type: "CLEAR_STAGE" }
   | { type: "TIME_DECREASE"; time: number }
-  | { type: "GAME_START" }
   | { type: "GAME_OVER" };
 
 const initialState: State = {
