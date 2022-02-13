@@ -49,11 +49,10 @@ const gameReducer = (state: State, action: Action): State => {
       };
     case "TIME_DECREASE":
       return { ...state, time: state.time < action.time ? 0 : state.time - action.time };
-    case "GAME_START":
-      return { ...initialState, isPlaying: true };
+    case "RESET_GAME":
+      return { ...initialState };
     case "GAME_OVER":
       return { ...state, isPlaying: false };
-
     default:
       throw new Error("Action type error");
   }

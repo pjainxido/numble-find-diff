@@ -1,4 +1,4 @@
-import { useState, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { gameReducer, initialState } from "../../reducer";
 import GameHeader from "./Header";
 import Block from "./Block";
@@ -25,19 +25,21 @@ const FindDiffGame: React.FC<IFindDiffGame> = ({ boardSide, timePenalty, timePer
 
   useEffect(() => {
     dispatch({ type: "START_STAGE", time: timePerStage });
-    console.log(state);
+  }, [stage]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       if (isPlaying) decreaseTime(1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [stage]);
+  }, [isPlaying]);
 
   useEffect(() => {
-    console.log(state);
     if (time === 0) {
       dispatch({ type: "GAME_OVER" });
-      alert(`GAME OVER 스테이지: ${stage} 점수: ${score} `);
-      dispatch({ type: "GAME_START" });
+      alert("GAME OVER!\n" + `스테이지: ${stage}, 점수: ${score} `);
+      dispatch({ type: "RESET_GAME" });
+      dispatch({ type: "START_STAGE", time: timePerStage });
     }
   }, [time]);
 
